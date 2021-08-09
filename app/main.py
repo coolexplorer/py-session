@@ -9,7 +9,7 @@ from redis.redis import init_redis
 
 app = FastAPI(
     title='py-session',
-    description='Session service made by Python'
+    description='Session service made by Python with redis'
 )
 
 # config
