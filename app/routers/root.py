@@ -1,13 +1,17 @@
 import logging
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi_versioning import version
 
-import schemas.BaseResponse as baseResponseSchema
+from dependencies.token import validate_token
+import schemas.base_response as baseResponseSchema
 
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=['root'])
+router = APIRouter(
+                tags=['root'],
+                dependencies=[Depends(validate_token)]
+                )
 
 
 @router.get('/ping')

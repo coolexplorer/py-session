@@ -3,54 +3,43 @@ from os import stat
 
 from fastapi import APIRouter, Header, Depends, status, HTTPException
 from fastapi_versioning import version
-import requests
+from requests.api import get
 
 from config import config
 from const.url import *
+from dependencies.token import validate_token, get_token
+import schemas.session as sessionSchema
+from redis.redis_account import redis_account
 from utils.url import *
+import utils.jwt as jwt_util
 
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=['session'])
-
-
-headers_dict = { "Accept-Encoding": "application/json" }
-async def validate_token(authorization: str = Header(...), settings: config.Settings = Depends(config.get_setting)):
-    if authorization:
-        headers_dict["Authorization"] = authorization
-
-        validate_url = create_url(HTTP_PROTOCOL, settings.auth_address, 1, TOKEN_VALIDATE_PATH)
-        response = requests.get(validate_url, headers=headers_dict)
-        
-        if response.status_code != status.HTTP_200_OK or response.json()['result'] == False:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail='Token is not valid'
-            )
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Token is not valid'
-        )
+router = APIRouter(
+                tags=['session'],
+                dependencies=[Depends(validate_token)]
+                )
 
 
 @router.post('/session')
 @version(1)
-async def create_session(token_valid: bool = Depends(validate_token), settings : config.Settings = Depends(config.get_setting)):    
-    return 'session created'
-
+async def create_session(sessionIn: sessionSchema.SessionIn, token: str = Depends(get_token)):
+    payload = jwt_util.decode(token)
+    session_id = payload['session_id']
+    response = await redis_account.session_crud.set_dict(session_id, sessionIn.data)
+    return f'session created : key - {session_id}, data - {sessionIn.data}'
 
 @router.get('/session')
 @version(1)
-async def get_session():
+async def get_session(settings : config.Settings = Depends(config.get_settings)):
     pass
 
 @router.put('/session')
 @version(1)
-async def update_session():
+async def update_session(settings : config.Settings = Depends(config.get_settings)):
     pass
 
 @router.put('/session/touch')
 @version(1)
-async def touch_session():
+async def touch_session(settings : config.Settings = Depends(config.get_settings)):
     pass

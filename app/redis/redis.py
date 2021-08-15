@@ -2,14 +2,14 @@ from aioredis import Redis, from_url
 
 from config import config
 
-configuration = config.Settings()
+settings = config.Settings()
 
 async def init_redis() -> Redis:
     redis = await from_url(
-        url=configuration.redis_url,
-        password=configuration.redis_password,
+        url=settings.redis_url,
+        password=settings.redis_password,
         encoding="utf-8",
-        db=configuration.redis_db,
+        db=settings.redis_db,
         decode_responses=True,
     )
 

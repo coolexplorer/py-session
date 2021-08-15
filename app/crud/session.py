@@ -1,5 +1,6 @@
 from aioredis import Redis
 
+
 class SessionCrud():
     def __init__(self, redis: Redis) -> None:
         self.redis = redis
