@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from fastapi_versioning import version
 
 from dependencies.token import validate_token
-import schemas.base_response as baseResponseSchema
+import schemas.base_response as base_response_schema
 
 
 logger = logging.getLogger(__name__)
@@ -17,4 +17,4 @@ router = APIRouter(
 @router.get('/ping')
 @version(1)
 async def pong():
-    return baseResponseSchema.BaseResponse(result=True)
+    return base_response_schema.BaseResponse(result=True)
