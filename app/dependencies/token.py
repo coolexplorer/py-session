@@ -5,6 +5,8 @@ from config import config
 from const.url import *
 from utils.url import *
 
+import utils.jwt as jwt_util
+
 
 async def validate_token(authorization: str = Header(...), settings: config.Settings = Depends(config.get_settings)):
     headers_dict = { "Accept-Encoding": "application/json" }
@@ -26,7 +28,12 @@ async def validate_token(authorization: str = Header(...), settings: config.Sett
             detail='Token is not valid'
         )
 
+
 async def get_token(authorization: str = Header(...)) -> str:
     tokens = authorization.split(' ')
     return tokens[1]
 
+
+async def get_session_id(token: str = Depends(get_token)) -> str:
+    payload = jwt_util.decode(token)
+    return payload['session_id']

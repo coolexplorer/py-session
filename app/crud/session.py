@@ -13,3 +13,6 @@ class SessionCrud():
     
     async def get_all(self, key: str):
         return await self.redis.hgetall(key)
+
+    async def touch(self, key: str):
+        return await self.redis.touch(key)

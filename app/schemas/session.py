@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 
 class SessionBase(BaseModel):
-    email: str
     data: dict
 
 class SessionIn(SessionBase):
