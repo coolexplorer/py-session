@@ -8,10 +8,7 @@ import schemas.base_response as base_response_schema
 
 
 logger = logging.getLogger(__name__)
-router = APIRouter(
-                tags=['root'],
-                dependencies=[Depends(validate_token)]
-                )
+router = APIRouter(tags=['root'])
 
 
 @router.get('/ping')
