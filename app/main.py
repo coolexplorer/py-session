@@ -5,11 +5,14 @@ from fastapi_versioning import VersionedFastAPI
 from routers import root, session
 from config import config
 from redis.redis import init_redis
+from redis.redis_account import redis_account
+from crud.session import SessionCrud
+
 
 
 app = FastAPI(
     title='py-session',
-    description='Session service made by Python'
+    description='Session service made by Python with redis'
 )
 
 # config
@@ -28,6 +31,7 @@ app = VersionedFastAPI(app,
 @app.on_event("startup")
 async def startup_event():
     app.state.redis = await init_redis()
+    redis_account.set_redis(SessionCrud(app.state.redis))
 
 
 @app.on_event("shutdown")

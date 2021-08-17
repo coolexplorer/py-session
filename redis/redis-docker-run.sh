@@ -1,0 +1,1 @@
+docker run --rm --name redis -p 6379:6379 -v /Users/kimseunghwan/redis/data:/data -d redis redis-server --requirepass "allen-redis" --appendonly yes
