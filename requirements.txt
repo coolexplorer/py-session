@@ -1,4 +1,4 @@
-aioredis==2.0.0
+aioredis==2.0.1
 anyio==3.3.0
 asgiref==3.4.1
 async-timeout==3.0.1
